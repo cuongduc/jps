@@ -12,10 +12,10 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        'jps\Events\SomeEvent' => [
-            'jps\Listeners\EventListener',
-        ],
+    protected $listen = [];
+
+    protected $subscribe = [
+        \jps\Listeners\UserEventListener::class,
     ];
 
     /**

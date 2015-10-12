@@ -2,64 +2,92 @@
 
 namespace jps\Http\Controllers\Auth;
 
-use jps\User;
-use Validator;
 use jps\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use jps\Http\Requests\AccountRegistrationRequest;
+use jps\Http\Requests\CreateNewSessionRequest;
+use jps\Jobs\RegisterUserAccountJob;
+use jps\Jobs\AuthenticateUserJob;
+use jps\Jobs\ActivateUserAccountJob;
 
 class AuthController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
-
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
-
-    /**
-     * Create a new authentication controller instance.
-     *
-     * @return void
-     */
+    
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * Show account registration form
+     * 
+     * @return [type] [description]
      */
-    protected function validator(array $data)
+    public function getRegister()
     {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        return view('auth.register');
     }
 
     /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
+     * Process user registration
+     * 
+     * @param  AccountRegistrationRequest $request [description]
+     * @return [type]                              [description]
      */
-    protected function create(array $data)
+    public function postRegister(AccountRegistrationRequest $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        if ($this->dispatchFrom(RegisterUserAccountJob::class, $request)) {
+            return redirect()->route('home');
+        }
+
+        return redirect()->route('auth::register');
+    }
+
+    /**
+     * Show login form
+     * 
+     */
+    public function getLogin()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Log user in with provided credentials
+     * by dispatching AuthenticateUserJob
+     * 
+     * @param  CreateNewSessionRequest $request [description]
+     * @return [type]                           [description]
+     */
+    public function postLogin(CreateNewSessionRequest $request)
+    {
+        if ($this->dispatchFrom(AuthenticateUserJob::class, $request, [
+            'active'    => 1,
+            'remember'  => $request->has('remember'),
+        ])) {
+            flash()->success(trans('authentication.login_success'));
+            return redirect()->intended('/');
+        }
+
+        session()->flash('login_error', trans('authentication.login_error'));
+        return redirect()->route('auth::login')
+                         ->withInput($request->only('email', 'remember'));
+    }
+
+
+    /**
+     * Activate user account by dispatching
+     * ActivateUserAccount Job
+     * @param  [type] $code [description]
+     * @return [type]       [description]
+     */
+    public function activate($code)
+    {
+        if ($this->dispatch(new ActivateUserAccountJob($code))) {
+            flash()->success(trans('authentication.activation_success'));
+            return redirect()->home();
+        }
+
+        flash()->error(trans('authentication.activation_error'));
+        return redirect()->home();
     }
 }

@@ -6,7 +6,11 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*"
+        "laravel/framework": "5.1.*",
+        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "zizaco/entrust": "dev-laravel-5",
+        "cviebrock/eloquent-sluggable": "^3.0",
+        "laracasts/flash": "~1.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

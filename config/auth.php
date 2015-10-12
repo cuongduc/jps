@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'model' => jps\User::class,
+    'model' => jps\Entities\Users\User::class,
 
     /*
     |--------------------------------------------------------------------------

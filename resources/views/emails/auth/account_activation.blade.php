@@ -1,0 +1,1 @@
+Activate at: <a href="{{ $activation_link }}">Activate Now!</a>

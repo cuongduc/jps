@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => env('APP_LOCALE', 'en'),
 
     /*
     |--------------------------------------------------------------------------
@@ -145,6 +145,13 @@ return [
         jps\Providers\EventServiceProvider::class,
         jps\Providers\RouteServiceProvider::class,
 
+        /**
+         * Third-party Service Providers...
+         */
+        Zizaco\Entrust\EntrustServiceProvider::class,
+        Cviebrock\EloquentSluggable\SluggableServiceProvider::class,
+        Laracasts\Flash\FlashServiceProvider::class,
+
     ],
 
     /*
@@ -193,7 +200,8 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
-
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Flash'     => Laracasts\Flash\Flash::class,
     ],
 
 ];
