@@ -73,6 +73,16 @@ class AuthController extends Controller
                          ->withInput($request->only('email', 'remember'));
     }
 
+    /**
+     * Log user out
+     * 
+     * @return [type] [description]
+     */
+    public function logout()
+    {
+        auth()->logout();
+        flash()->success(trans('authentication.logout_success'));
+    }
 
     /**
      * Activate user account by dispatching
