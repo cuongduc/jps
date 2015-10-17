@@ -82,6 +82,7 @@ class AuthController extends Controller
     {
         auth()->logout();
         flash()->success(trans('authentication.logout_success'));
+        return redirect()->home();
     }
 
     /**

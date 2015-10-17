@@ -10,13 +10,15 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Cviebrock\EloquentSluggable\SluggableInterface;
 use Cviebrock\EloquentSluggable\SluggableTrait;
+use jps\Presenters\Traits\PresentableTrait;
 
 /**
  * Class User
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, SluggableInterface
 {
-    use Authenticatable, CanResetPassword, EntrustUserTrait, SluggableTrait;
+    use Authenticatable, CanResetPassword, 
+        EntrustUserTrait, SluggableTrait, PresentableTrait;
 
     /**
      * The table used by the model
@@ -38,6 +40,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $sluggable = ['build_from' => 'name', 'save_to' => 'slug'];
+
+    /**
+     * The presenter of the model
+     * @var [type]
+     */
+    protected $presenter = \jps\Presenters\Users\UserPresenter::class;
     /**
      * The attributes that are hidden
      * from JSON request responses

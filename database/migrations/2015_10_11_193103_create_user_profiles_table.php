@@ -21,7 +21,8 @@ class CreateUserProfilesTable extends Migration
             $table->string('telephone', 25)->nullable();
             $table->string('avatar')->nullable();
             $table->integer('user_id');
-
+            $table->timestamps();
+            
             $table->foreign('user_id')
                   ->references('id')->on('users')
                   ->onDelete('cascade');

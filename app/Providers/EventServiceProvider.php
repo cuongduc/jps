@@ -4,6 +4,8 @@ namespace jps\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use jps\Entities\Users\User;
+use jps\Entities\Users\Observers\UserObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot($events);
 
-        //
+        // Observe for User model's events
+        User::observe(new UserObserver);
     }
 }

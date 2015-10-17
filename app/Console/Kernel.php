@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \jps\Console\Commands\Inspire::class,
+        \jps\Console\Commands\CreateAdminUserCommand::class,    
     ];
 
     /**

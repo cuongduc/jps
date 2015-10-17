@@ -5,6 +5,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
 {
+    protected $seeders = [
+        'PermissionsTableSeeder',
+        'RolesTableSeeder'
+    ];
+    
     /**
      * Run the database seeds.
      *
@@ -14,8 +19,9 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call(UserTableSeeder::class);
+        $this->call(PermissionsTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
 
-        Model::reguard();
+        // Model::regard();
     }
 }
